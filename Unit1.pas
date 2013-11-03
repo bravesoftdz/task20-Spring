@@ -22,6 +22,8 @@ type
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure TimerKeyDownTimer(Sender: TObject);
@@ -57,20 +59,23 @@ begin
   TimerKeyDown.Enabled := false;
   TimerFly.Enabled := false;
 
-  ButtonFlag.Top := trunc(FlagHeight);
-  ButtonWall.Top := trunc(WallHeight);
+  ButtonFlag.left := trunc(FlagHeight);
+  ButtonWall.left := trunc(WallHeight);
 
   ButtonSpring.Enabled := True;
   ButtonSpring.Height := ButtonSpringHeight;
-  ButtonSpring.Top := 430;
+  ButtonSpring.left := 0;
   ButtonSpring.SetFocus;
+
+  Label6.Caption := FloatToStr(FlagHeight);
+  Label7.Caption := FloatToStr(WallHeight);
 end;
 
 procedure TForm1.TimerKeyDownTimer(Sender: TObject);
 begin
   MechanicIncreaseForce;
   if SpringForce > SpringForceMax then begin
-    MechanicCalcAccel;
+
     MechanicStart;
 
     TimerKeyDown.Enabled := False;
@@ -78,7 +83,7 @@ begin
     ButtonSpring.Enabled := False;
   end;
 
-  ButtonSpring.Height := ButtonSpringHeight - trunc(SpringForce) ;
+  ButtonSpring.Width := ButtonSpringHeight - trunc(SpringForce) ;
 
   Label3.Caption := FloatToStr(SpringForce);
 end;
@@ -91,14 +96,14 @@ begin
     TimerFly.Enabled := False;
     ButtonSpring.Enabled := True;
     MechanicResult;
-    //Button1Click(Sender);
+
     Label4.Caption := IntToStr(Bonus);
     Label5.Caption := IntToStr(Crash);
 
     MechanicNewStep;
   end;
 
-  ButtonSpring.Top := WorldTop - trunc(SpringHeight);
+  ButtonSpring.left := trunc(SpringHeight);
 
   Label1.Caption := FloatToStr(SpringHeight);
   Label2.Caption := FloatToStr(SpringAccel);
@@ -116,7 +121,6 @@ procedure TForm1.ButtonSpringKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if Key = VK_SPACE then begin
-    MechanicCalcAccel;
     MechanicStart;
     
     TimerKeyDown.Enabled := False;

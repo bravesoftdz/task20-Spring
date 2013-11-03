@@ -25,6 +25,7 @@ var
   procedure MechanicStart;
   procedure MechanicUpdate(const interval: Cardinal);
   procedure MechanicIncreaseForce;
+  procedure MechanicCalcAccel;
   procedure MechanicResult;
 
 implementation
@@ -68,12 +69,16 @@ end;
 procedure MechanicStart;
 begin
   Worldtime := 0;
-  SpringAccel := SpringForce / SpringWeight;
 end;
 
 procedure MechanicIncreaseForce;
 begin
   SpringForce := SpringForce + SpringForceIncrement;
+end;
+
+procedure MechanicCalcAccel;
+begin
+  SpringAccel := SpringForce / SpringWeight;
 end;
 
 procedure MechanicUpdate(const interval: Cardinal);

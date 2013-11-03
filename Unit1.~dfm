@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 1097
+  Left = 444
   Top = 130
-  Width = 164
+  Width = 817
   Height = 569
   Caption = 'Form1'
   Color = clBtnFace
@@ -49,9 +49,23 @@ object Form1: TForm1
     Height = 13
     Caption = 'Label1'
   end
+  object Label6: TLabel
+    Left = 96
+    Top = 40
+    Width = 32
+    Height = 13
+    Caption = 'Label1'
+  end
+  object Label7: TLabel
+    Left = 96
+    Top = 56
+    Width = 32
+    Height = 13
+    Caption = 'Label1'
+  end
   object ButtonSpring: TButton
-    Left = 40
-    Top = 430
+    Left = 0
+    Top = 166
     Width = 33
     Height = 90
     TabOrder = 1
@@ -59,16 +73,16 @@ object Form1: TForm1
     OnKeyUp = ButtonSpringKeyUp
   end
   object ButtonFlag: TButton
-    Left = 40
-    Top = 208
+    Left = 224
+    Top = 192
     Width = 33
     Height = 24
     Caption = #1054
     TabOrder = 2
   end
   object ButtonWall: TButton
-    Left = 40
-    Top = 184
+    Left = 264
+    Top = 192
     Width = 33
     Height = 25
     Caption = #1061
