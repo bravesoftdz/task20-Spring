@@ -35,11 +35,25 @@ object Form1: TForm1
     Height = 13
     Caption = 'Label1'
   end
+  object Label4: TLabel
+    Left = 24
+    Top = 328
+    Width = 32
+    Height = 13
+    Caption = 'Label1'
+  end
+  object Label5: TLabel
+    Left = 24
+    Top = 344
+    Width = 32
+    Height = 13
+    Caption = 'Label1'
+  end
   object ButtonSpring: TButton
     Left = 40
     Top = 430
     Width = 33
-    Height = 80
+    Height = 90
     TabOrder = 1
     OnKeyDown = ButtonSpringKeyDown
     OnKeyUp = ButtonSpringKeyUp
@@ -68,14 +82,6 @@ object Form1: TForm1
     Caption = #1057#1090#1072#1074#1100'!'
     TabOrder = 0
     OnClick = Button1Click
-  end
-  object Panel1: TPanel
-    Left = 104
-    Top = 336
-    Width = 25
-    Height = 25
-    Caption = 'Panel1'
-    TabOrder = 4
   end
   object TimerKeyDown: TTimer
     Enabled = False

@@ -6,6 +6,9 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ExtCtrls, StdCtrls;
 
+const
+   ButtonSpringHeight = 90;
+
 type
   TForm1 = class(TForm)
     ButtonSpring: TButton;
@@ -16,8 +19,9 @@ type
     TimerFly: TTimer;
     Label1: TLabel;
     Label2: TLabel;
-    Panel1: TPanel;
     Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure TimerKeyDownTimer(Sender: TObject);
@@ -32,28 +36,14 @@ type
     { Public declarations }
   end;
 
-const
-  MinHeight = 240;
-  MaxHeight = 70;
-  SpringForceIncrement = 4;
-  SpringForceMax = 76;
-  SpringWeight = 7;
-  WorldAccel = 9.8;
-  WorldAccelFrict = 0.23;
-  WorldTop = 430;
-
 var
   Form1: TForm1;
-
-  SpringForce : Real = 0;
-
-  SpringHeight : Real = 0;
-  SpringAccel : Real = 0;
-  Worldtime : Cardinal = 0;
 
 implementation
 
 {$R *.dfm}
+
+uses mechanica;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
@@ -62,53 +52,53 @@ end;
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
-  
+  MechanicNewLevel;
+
   TimerKeyDown.Enabled := false;
   TimerFly.Enabled := false;
-  
-  ButtonFlag.Top := Random(MinHeight-MaxHeight) + MaxHeight;
-  ButtonWall.Top := Random(MinHeight);
-  while ButtonWall.Top > ButtonFlag.Top - ButtonWall.Height do
-    ButtonWall.Top := Random(MinHeight);
+
+  ButtonFlag.Top := trunc(FlagHeight);
+  ButtonWall.Top := trunc(WallHeight);
 
   ButtonSpring.Enabled := True;
-  ButtonSpring.Height := 80;
+  ButtonSpring.Height := ButtonSpringHeight;
   ButtonSpring.Top := 430;
   ButtonSpring.SetFocus;
-
-  SpringForce := 0;
-  
 end;
 
 procedure TForm1.TimerKeyDownTimer(Sender: TObject);
 begin
-  SpringForce := SpringForce + SpringForceIncrement;
-  ButtonSpring.Height := SpringForceMax - trunc(SpringForce);
-  
-  if SpringForce > SpringForceMax-10 then begin
-    SpringAccel := SpringForce / SpringWeight;
-    Worldtime := 0;
-    
+  MechanicIncreaseForce;
+  if SpringForce > SpringForceMax then begin
+    MechanicCalcAccel;
+    MechanicStart;
+
     TimerKeyDown.Enabled := False;
     TimerFly.Enabled := True;
     ButtonSpring.Enabled := False;
   end;
+
+  ButtonSpring.Height := ButtonSpringHeight - trunc(SpringForce) ;
 
   Label3.Caption := FloatToStr(SpringForce);
 end;
 
 procedure TForm1.TimerFlyTimer(Sender: TObject);
 begin
-  SpringHeight := ( SpringAccel - WorldAccel* 0.5 ) * Worldtime * Worldtime * 0.0005;
-  SpringAccel := SpringAccel - WorldAccelFrict;
-  if SpringAccel < 0 then SpringAccel := 0;
-  if SpringHeight < 0 then begin
-    SpringHeight := 0;
+  MechanicUpdate(TimerFly.Interval);
+  
+  if (SpringHeight < 0.001)and(Worldtime > TimerFly.Interval) then begin
     TimerFly.Enabled := False;
+    ButtonSpring.Enabled := True;
+    MechanicResult;
+    //Button1Click(Sender);
+    Label4.Caption := IntToStr(Bonus);
+    Label5.Caption := IntToStr(Crash);
+
+    MechanicNewStep;
   end;
 
   ButtonSpring.Top := WorldTop - trunc(SpringHeight);
-  Worldtime := Worldtime + TimerFly.Interval;
 
   Label1.Caption := FloatToStr(SpringHeight);
   Label2.Caption := FloatToStr(SpringAccel);
@@ -126,10 +116,11 @@ procedure TForm1.ButtonSpringKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if Key = VK_SPACE then begin
+    MechanicCalcAccel;
+    MechanicStart;
+    
     TimerKeyDown.Enabled := False;
     TimerFly.Enabled := True;
-    SpringAccel := SpringForce / SpringWeight;
-    Worldtime := 0;
     ButtonSpring.Enabled := False;
   end;
 end;
