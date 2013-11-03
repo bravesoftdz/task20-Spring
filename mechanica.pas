@@ -29,13 +29,11 @@ var
 
 implementation
 
-
 const
-  SpringForceIncrement = 2;
+  SpringForceIncrement = 2;    // для увеличения силы при нажатии 
   SpringWeight = 7;
   WorldAccel = 9.8;
-  WorldAccelFrict = 0.23;
-  WorldBound = 1;
+  WorldAccelFrict = 0.23;      // для уменьшения ускорения
 
 var
   SpringHeightMax : Real;
@@ -61,7 +59,7 @@ begin
 
   WallHeight := Random(MaxHeight) + MinHeight + 50; //чтобы всегда была выше флага
   FlagHeight := Random(MaxHeight) + MinHeight;
-  while FlagHeight > WallHeight - 10 do //высота кнопки
+  while FlagHeight > WallHeight - 10 do     // учёт высота кнопки
     FlagHeight := Random(MaxHeight) + MinHeight;
 end;
 
@@ -79,7 +77,8 @@ end;
 procedure MechanicUpdate(const interval: Cardinal);
 begin
   if SpringHeightMaxFlag
-    then SpringHeightMax := SpringHeight;
+    then SpringHeightMax := SpringHeight; // запоминаем МАХ раньше, чем оно станет уменьшаться 
+
   SpringHeight := ( SpringAccel - WorldAccel*0.5 ) * Worldtime * Worldtime * 0.0005;
   if SpringHeight < 0
     then SpringHeight := 0;
@@ -90,7 +89,7 @@ begin
 
   if (SpringHeightMaxFlag)and(SpringHeightMax - SpringHeight > 0) then begin
     SpringHeightMaxFlag := false;
-    SpringHeightMax := SpringHeight;
+    SpringHeightMax := SpringHeight;        
   end;
 
   Worldtime := Worldtime + interval;
@@ -98,6 +97,8 @@ end;
 
 procedure MechanicResult;
 begin
+  // если достигнутая МАХ высота больше чем высота флага, значит мы его схватили
+  // если высота больше чем стена, значит перескочили
   if SpringHeightMax > FlagHeight
     then if SpringHeightMax > WallHeight
       then Crash := Crash + 1
